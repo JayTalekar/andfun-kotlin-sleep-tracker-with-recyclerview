@@ -16,6 +16,7 @@
 
 package com.example.android.trackmysleepquality.sleeptracker
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -42,6 +43,7 @@ class SleepTrackerFragment : Fragment() {
      *
      * This function uses DataBindingUtil to inflate R.layout.fragment_sleep_quality.
      */
+    @SuppressLint("FragmentLiveDataObserve")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -62,6 +64,20 @@ class SleepTrackerFragment : Fragment() {
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 
         binding.setLifecycleOwner(this)
+
+        //Instantiating SleepNight Adapter
+        val adapter = SleepNightAdapter()
+
+        //Notifying RecyclerView of the Adapter
+        binding.sleepList.adapter = adapter
+
+        //
+        sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                adapter.data = it
+            }
+        })
+
 
         // Add an Observer on the state variable for showing a Snackbar message
         // when the CLEAR button is pressed.

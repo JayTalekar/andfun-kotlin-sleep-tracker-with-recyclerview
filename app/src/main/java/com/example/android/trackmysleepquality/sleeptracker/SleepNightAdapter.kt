@@ -16,34 +16,28 @@
 
 package com.example.android.trackmysleepquality.sleeptracker
 
-import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.convertDurationToFormatted
 import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
 
-class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>(){
-
-    var data = listOf<SleepNight>()
-        //setter to notify whenever the data set changes
-        set(value){
-            field = value
-            notifyDataSetChanged()
-        }
-
-
-    override fun getItemCount(): Int = data.size
+// Extend ListAdapter so that it can work with DiffUtil
+// ListAdapter keeps track of list and notify its change when list is updated
+// ListAdapter has a parameter which is a Callback and use it to figure out changes took placed in the list
+class SleepNightAdapter : ListAdapter<SleepNight, SleepNightAdapter.ViewHolder>(SleepNightDiffCallback()) {
 
     //Called by RecyclerView to display data with the position of view to be displayed
     // and ViewHolder of which data is to be set
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = data[position]
+        val item = getItem(position)
         holder.bind(item)
     }
 
@@ -101,4 +95,15 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>(){
 
     }
 
+}
+
+class SleepNightDiffCallback : DiffUtil.ItemCallback<SleepNight>() {
+
+    override fun areItemsTheSame(oldItem: SleepNight, newItem: SleepNight): Boolean {
+        return oldItem.nightId == newItem.nightId
+    }
+
+    override fun areContentsTheSame(oldItem: SleepNight, newItem: SleepNight): Boolean {
+        return oldItem == newItem
+    }
 }

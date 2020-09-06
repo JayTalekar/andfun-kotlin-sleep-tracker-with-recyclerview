@@ -17,7 +17,6 @@
 package com.example.android.trackmysleepquality.sleeptracker
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -28,6 +27,7 @@ import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.convertDurationToFormatted
 import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
+import com.example.android.trackmysleepquality.databinding.ListItemSleepNightBinding
 
 // Extend ListAdapter so that it can work with DiffUtil
 // ListAdapter keeps track of list and notify its change when list is updated
@@ -50,10 +50,10 @@ class SleepNightAdapter : ListAdapter<SleepNight, SleepNightAdapter.ViewHolder>(
     }
 
 
-    class ViewHolder private constructor(itemView : View): RecyclerView.ViewHolder(itemView){
-        val sleepLength : TextView = itemView.findViewById(R.id.sleep_length)
-        val quality : TextView = itemView.findViewById(R.id.quality_string)
-        val qualityImage : ImageView = itemView.findViewById(R.id.quality_image)
+    class ViewHolder private constructor(val binding: ListItemSleepNightBinding) : RecyclerView.ViewHolder(binding.root) {
+        val sleepLength: TextView = binding.sleepLength
+        val quality: TextView = binding.qualityString
+        val qualityImage: ImageView = binding.qualityImage
 
         /**
          *  Binds the data from SleepNight instance to bind it on a List ItemView
@@ -86,10 +86,9 @@ class SleepNightAdapter : ListAdapter<SleepNight, SleepNightAdapter.ViewHolder>(
                 //inflater to inflate the required view
                 val layoutInflater = LayoutInflater.from(parent.context)
                 //Inflating the required view by instantiating the XML File
-                val view = layoutInflater.inflate(R.layout.list_item_sleep_night,
-                        parent, false)
+                val binding = ListItemSleepNightBinding.inflate(layoutInflater, parent, false)
                 //Wrapping the view with its respective holder
-                return ViewHolder(view)
+                return ViewHolder(binding)
             }
         }
 
